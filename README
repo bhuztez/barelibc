@@ -1,0 +1,6 @@
+========
+barelibc
+========
+
+Mostly a stripped down version of musl libc 1.1.11 for x86-64 linux
+only, will enter seccomp strict mode as soon as program started.
