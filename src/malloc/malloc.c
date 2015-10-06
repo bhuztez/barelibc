@@ -266,16 +266,12 @@ void *realloc(void *ptr, size_t size) {
   struct block_header *header = (struct block_header *)ptr - 1;
   size_t nwords = ROUND_UP(size, sizeof(uintptr_t))/sizeof(uintptr_t);
 
-  if (nwords <= header->size)
-    return ptr;
-
-  if (header != mempool.last_block) {
+  if (header != mempool.last_block)
     merge_right_block(header);
 
-    if (header->size >= nwords) {
-      free_after(header, nwords);
-      return ptr;
-    }
+  if (nwords <= header->size) {
+    free_after(header, nwords);
+    return ptr;
   }
 
   void *newptr = malloc(size);

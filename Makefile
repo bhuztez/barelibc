@@ -1,4 +1,6 @@
 CC=gcc
+AR=ar
+RANLIB=ranlib
 ARCH=x86_64
 CFLAGS = -Os -pipe -fomit-frame-pointer -fno-unwind-tables -fno-asynchronous-unwind-tables -Wa,--noexecstack -Wall -Wextra -Werror -I./include
 CFLAGS_C99FSE = -nostdlib -std=gnu11 -ffreestanding -fexcess-precision=standard -frounding-math
@@ -9,6 +11,9 @@ LDFLAGS = -Wl,--hash-style=both
 LIBCC = -lgcc -lgcc_eh
 CFLAGS_ALL = $(CFLAGS_C99FSE) -D_DEFAULT_SOURCE -D_XOPEN_SOURCE=700 $(CPPFLAGS) $(CFLAGS)
 
+EMPTY_LIB_NAMES = m rt pthread crypt util xnet resolv dl
+EMPTY_LIBS = $(EMPTY_LIB_NAMES:%=lib/lib%.a)
+
 CRT_SRCS = $(sort $(wildcard crt/$(ARCH)/*.s))
 CRT_LIBS = $(CRT_SRCS:crt/$(ARCH)/%.s=lib/%.o)
 
@@ -17,7 +22,7 @@ SRCS = $(sort $(wildcard src/*/*.c))
 OBJS = $(SRCS:src/%.c=obj/%.o) $(ASMS:src/%.s=obj/%.o)
 
 STATIC_LIBS = lib/libc.a
-ALL_LIBS = $(CRT_LIBS) $(STATIC_LIBS)
+ALL_LIBS = $(CRT_LIBS) $(STATIC_LIBS) $(EMPTY_LIBS)
 
 DIRS = $(sort $(foreach obj,$(OBJS) $(ALL_LIBS),$(dir $(obj))))
 
@@ -61,8 +66,11 @@ obj/%.o: src/%.c | $(DIRS)
 	$(CC) $(CFLAGS_ALL) -c -o "$@" "$<"
 
 lib/libc.a: $(OBJS) | $(DIRS)
-	$(AR) rc $@ $(OBJS)
- 	$(RANLIB) $@
+	$(AR) rc "$@" $(OBJS)
+	$(RANLIB) "$@"
+
+$(EMPTY_LIBS):
+	$(AR) rc "$@"
 
 $(DIRS): %:
 	mkdir -p "$@"
