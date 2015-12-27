@@ -4,3 +4,11 @@ barelibc
 
 Mostly a stripped down version of musl libc 1.1.11 for x86-64 linux
 only, will enter seccomp strict mode as soon as program started.
+
+compile C program
+
+  gcc -static -Bpath/to/barelibc/lib -include path/to/barelibc/prologue.h -o evil evil.c
+
+compile C++ program
+
+  gcc -static -fno-rtti -fno-exceptions -Bpath/to/barelibc/lib -include path/to/barelibc/prologue.hpp -o evil evil.cpp
