@@ -7,8 +7,8 @@ only, will enter seccomp strict mode as soon as program started.
 
 compile C program
 
-  gcc -static -Bpath/to/barelibc/lib -o evil path/to/barelibc/lib/libc.a evil.c
+  gcc -static -Bpath/to/barelibc/lib -o evil evil.c
 
 compile C++ program
 
-  gcc -static -fno-rtti -fno-exceptions -Bpath/to/barelibc/lib -include path/to/barelibc/prologue.hpp -o evil path/to/barelibc/lib/libc.a evil.cpp
+  gcc -static -fno-rtti -fno-exceptions -Bpath/to/barelibc/lib -include path/to/barelibc/prologue.hpp -o evil evil.cpp
